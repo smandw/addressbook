@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
     tools{
         maven 'mymaven'
         jdk 'myjava'
@@ -13,14 +13,19 @@ pipeline {
 
        stages {
         stage('Compile') {
-            steps {
+             agent any
+            sshagent(['build_server']) {
+                steps {
                 script{
-                    echo "Compiling in ${params.ENV} environment"
-                    sh 'mvn compile'
+                    echo "Compiling in ${params.ENV} envgit push ironment"
+                    sh "scp ec2-user@172.31.36.175 server-config.sh ec2-user@172.31.36.175:/home/ec2-user"
+                    sh "ssh ec2-user@172.31.36.175 'bash ~/server-config.sh'"
                 }
                 }
             }
+            }
         stage('UnitTest') {
+            agent any
             when{
                 expression{
                     params.executeTest == true
@@ -29,11 +34,12 @@ pipeline {
             steps {
                 script{
                     echo "Run the Unit test cases"
-                    sh 'mvn test'
+                    sh 'mvn test' 
                 }
                 }
             }
         stage('Package') {
+             agent any
             steps {
                 script{
                     echo "Package the Code  ${params.APPVERSION}"
