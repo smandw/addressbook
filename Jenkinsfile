@@ -14,8 +14,12 @@ pipeline {
        stages {
         stage('Compile') {
              agent any
+<<<<<<< HEAD
             sshagent(['build_server']) {
                 steps {
+=======
+            steps {
+>>>>>>> e0d8f901029587f069d6dc3890d4f64309959524
                 script{
                     echo "Compiling in ${params.ENV} envgit push ironment"
                     sh "scp ec2-user@172.31.36.175 server-config.sh ec2-user@172.31.36.175:/home/ec2-user"
@@ -25,7 +29,11 @@ pipeline {
             }
             }
         stage('UnitTest') {
+<<<<<<< HEAD
             agent any
+=======
+            agent {label  'linux_slave'}
+>>>>>>> e0d8f901029587f069d6dc3890d4f64309959524
             when{
                 expression{
                     params.executeTest == true
@@ -39,7 +47,11 @@ pipeline {
                 }
             }
         stage('Package') {
+<<<<<<< HEAD
              agent any
+=======
+            agent any
+>>>>>>> e0d8f901029587f069d6dc3890d4f64309959524
             steps {
                 script{
                     echo "Package the Code  ${params.APPVERSION}"
